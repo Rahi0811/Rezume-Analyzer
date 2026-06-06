@@ -84,7 +84,7 @@ def evaluate_resume(resume_text: str, job_description: str) -> dict:
 # ------------------------------------------------------------------
 # 3. Streamlit UI Dashboard Interface
 # ------------------------------------------------------------------
-st.title("🎯 Enterprise AI Resume Shortlister")
+st.title("🎯 Enterprise AI Resume-to -job fit analyzer")
 st.caption("Automate candidate filtering using deep contextual semantic matching.")
 
 # Layout: Two columns for input setup
