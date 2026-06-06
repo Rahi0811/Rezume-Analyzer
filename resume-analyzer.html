@@ -1,0 +1,1453 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>NeuralHire — AI Talent Intelligence Platform</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+:root {
+  --navy:    #06071a;
+  --navy2:   #0b0d2a;
+  --navy3:   #0f1135;
+  --panel:   #131535;
+  --border:  #1e2147;
+  --violet:  #7c3aed;
+  --violet2: #6d28d9;
+  --vlight:  #a78bfa;
+  --vlighter:#c4b5fd;
+  --cream:   #fdf6e3;
+  --cream2:  #f5edcf;
+  --muted:   #6b7280;
+  --muted2:  #9ca3af;
+  --electric:#38bdf8;
+  --rose:    #fb7185;
+  --jade:    #34d399;
+}
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+
+body {
+  background: var(--navy);
+  color: var(--cream);
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 300;
+  line-height: 1.7;
+  overflow-x: hidden;
+}
+
+/* ─── SCROLLBAR ─────────────────────────────── */
+::-webkit-scrollbar{width:5px;}
+::-webkit-scrollbar-track{background:var(--navy);}
+::-webkit-scrollbar-thumb{background:var(--violet2);border-radius:4px;}
+
+/* ─── NOISE OVERLAY ─────────────────────────── */
+body::before {
+  content:'';position:fixed;inset:0;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events:none;z-index:0;opacity:.5;
+}
+
+/* ─── CANVAS PARTICLES ──────────────────────── */
+#particles{position:fixed;inset:0;pointer-events:none;z-index:1;}
+
+/* ─── NAV ───────────────────────────────────── */
+nav {
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  padding:0 5vw;height:68px;
+  display:flex;align-items:center;justify-content:space-between;
+  border-bottom:1px solid rgba(124,58,237,.15);
+  background:rgba(6,7,26,.85);
+  backdrop-filter:blur(24px);
+}
+.nav-logo {
+  font-family:'Playfair Display',serif;
+  font-size:1.4rem;font-weight:900;
+  color:var(--cream);letter-spacing:-.02em;
+}
+.nav-logo span{color:var(--vlight);}
+.nav-links{display:flex;gap:2.5rem;align-items:center;}
+.nav-links a{
+  font-size:.8rem;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--muted2);text-decoration:none;
+  transition:color .2s;
+}
+.nav-links a:hover{color:var(--vlight);}
+.nav-cta{
+  padding:.55rem 1.4rem;border-radius:6px;
+  background:var(--violet);color:#fff !important;
+  font-size:.78rem !important;letter-spacing:.08em !important;
+  text-transform:uppercase !important;transition:all .25s !important;
+  border:1px solid var(--violet2);
+}
+.nav-cta:hover{background:var(--vlight);color:var(--navy) !important;transform:translateY(-1px);box-shadow:0 8px 24px rgba(124,58,237,.35);}
+@media(max-width:768px){.nav-links{display:none;}}
+
+/* ─── HERO ──────────────────────────────────── */
+.hero{
+  min-height:100vh;
+  display:flex;align-items:center;
+  padding:120px 5vw 80px;
+  position:relative;overflow:hidden;
+}
+.hero-bg-glow{
+  position:absolute;
+  border-radius:50%;filter:blur(120px);pointer-events:none;
+}
+.glow-1{width:600px;height:600px;background:rgba(124,58,237,.18);top:-100px;right:-100px;}
+.glow-2{width:400px;height:400px;background:rgba(56,189,248,.1);bottom:0;left:-80px;}
+.glow-3{width:300px;height:300px;background:rgba(251,113,133,.08);bottom:100px;right:200px;}
+
+.hero-inner{
+  max-width:1280px;margin:0 auto;
+  display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center;
+  position:relative;z-index:2;width:100%;
+}
+@media(max-width:960px){.hero-inner{grid-template-columns:1fr;gap:48px;}}
+
+.hero-eyebrow{
+  display:inline-flex;align-items:center;gap:.6rem;
+  font-family:'DM Mono',monospace;font-size:.72rem;
+  letter-spacing:.2em;text-transform:uppercase;
+  color:var(--vlight);margin-bottom:1.5rem;
+}
+.eyebrow-dot{width:6px;height:6px;border-radius:50%;background:var(--jade);animation:pulse-jade 2s ease infinite;}
+@keyframes pulse-jade{0%,100%{box-shadow:0 0 0 0 rgba(52,211,153,.5);}50%{box-shadow:0 0 0 6px rgba(52,211,153,0);}}
+
+.hero-title{
+  font-family:'Playfair Display',serif;
+  font-size:clamp(2.8rem,6vw,5.2rem);
+  font-weight:900;line-height:1.05;
+  letter-spacing:-.03em;color:var(--cream);
+  margin-bottom:1.8rem;
+}
+.hero-title .italic{font-style:italic;color:var(--vlight);}
+.hero-title .underline-svg{position:relative;display:inline-block;}
+.hero-title .underline-svg::after{
+  content:'';position:absolute;bottom:-4px;left:0;right:0;height:3px;
+  background:linear-gradient(90deg,var(--violet),var(--electric));border-radius:2px;
+}
+
+.hero-sub{
+  font-size:1.05rem;color:var(--muted2);
+  max-width:480px;margin-bottom:2.8rem;line-height:1.8;
+}
+
+.hero-actions{display:flex;gap:1rem;flex-wrap:wrap;align-items:center;margin-bottom:3rem;}
+.btn-primary{
+  display:inline-flex;align-items:center;gap:.6rem;
+  padding:.85rem 2rem;border-radius:8px;
+  background:linear-gradient(135deg,var(--violet),var(--violet2));
+  color:#fff;font-size:.88rem;font-weight:500;
+  letter-spacing:.04em;text-decoration:none;border:none;cursor:pointer;
+  transition:all .3s;position:relative;overflow:hidden;
+}
+.btn-primary::before{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,var(--vlight),var(--violet));
+  opacity:0;transition:opacity .3s;
+}
+.btn-primary:hover::before{opacity:1;}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 16px 40px rgba(124,58,237,.4);}
+.btn-primary span{position:relative;}
+
+.btn-ghost{
+  display:inline-flex;align-items:center;gap:.5rem;
+  padding:.85rem 1.8rem;border-radius:8px;
+  border:1px solid var(--border);color:var(--muted2);
+  background:transparent;font-size:.88rem;cursor:pointer;
+  transition:all .25s;text-decoration:none;
+}
+.btn-ghost:hover{border-color:var(--vlight);color:var(--vlight);}
+
+.hero-trust{
+  display:flex;align-items:center;gap:1rem;
+  font-size:.78rem;color:var(--muted);
+}
+.trust-avatars{display:flex;}
+.trust-avatars .av{
+  width:32px;height:32px;border-radius:50%;
+  border:2px solid var(--navy);margin-left:-8px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:.7rem;font-weight:500;
+}
+.trust-avatars .av:first-child{margin-left:0;}
+
+/* Hero right — floating mockup */
+.hero-visual{position:relative;}
+.mockup-card{
+  background:var(--panel);border:1px solid var(--border);
+  border-radius:16px;padding:1.5rem;
+  box-shadow:0 32px 80px rgba(0,0,0,.5),0 0 0 1px rgba(124,58,237,.08);
+  position:relative;overflow:hidden;
+}
+.mockup-card::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,var(--violet),transparent);
+}
+.mockup-header{
+  display:flex;align-items:center;gap:.6rem;
+  margin-bottom:1.2rem;padding-bottom:1rem;
+  border-bottom:1px solid var(--border);
+}
+.mockup-dots{display:flex;gap:.4rem;}
+.mockup-dots span{width:10px;height:10px;border-radius:50%;}
+.dot-r{background:#ff5f57;} .dot-y{background:#febc2e;} .dot-g{background:#28c840;}
+.mockup-title{font-family:'DM Mono',monospace;font-size:.72rem;color:var(--muted);margin-left:.4rem;}
+
+.candidate-row{
+  display:flex;align-items:center;gap:.8rem;
+  padding:.7rem;border-radius:8px;margin-bottom:.5rem;
+  border:1px solid transparent;
+  transition:all .3s;
+  animation:slideRow .5s ease forwards;opacity:0;
+}
+@keyframes slideRow{to{opacity:1;transform:none;}from{opacity:0;transform:translateX(10px);}}
+.candidate-row:hover{background:rgba(124,58,237,.08);border-color:rgba(124,58,237,.2);}
+.av-candidate{
+  width:36px;height:36px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:.78rem;font-weight:500;flex-shrink:0;
+}
+.cand-info{flex:1;min-width:0;}
+.cand-name{font-size:.82rem;font-weight:500;color:var(--cream);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.cand-role{font-size:.7rem;color:var(--muted);}
+.score-pill{
+  font-family:'DM Mono',monospace;font-size:.75rem;
+  padding:.2rem .7rem;border-radius:20px;flex-shrink:0;
+}
+.score-high{background:rgba(52,211,153,.15);color:#34d399;border:1px solid rgba(52,211,153,.25);}
+.score-mid {background:rgba(196,181,253,.12);color:var(--vlighter);border:1px solid rgba(196,181,253,.2);}
+.score-low {background:rgba(251,113,133,.1);color:#fb7185;border:1px solid rgba(251,113,133,.2);}
+
+.score-bar-track{flex:1;height:4px;background:var(--border);border-radius:2px;max-width:60px;}
+.score-bar-fill{height:100%;border-radius:2px;transition:width 1.5s ease;}
+
+.mockup-stat-row{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:.6rem;
+  margin-top:1rem;padding-top:1rem;border-top:1px solid var(--border);
+}
+.mstat{text-align:center;}
+.mstat-val{font-family:'Playfair Display',serif;font-size:1.3rem;color:var(--vlight);}
+.mstat-label{font-size:.65rem;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;}
+
+/* Floating badge */
+.float-badge{
+  position:absolute;
+  background:var(--panel);border:1px solid var(--border);
+  border-radius:12px;padding:.7rem 1rem;
+  display:flex;align-items:center;gap:.6rem;
+  box-shadow:0 16px 40px rgba(0,0,0,.4);
+  font-size:.75rem;
+  animation:float 3s ease-in-out infinite;
+}
+@keyframes float{0%,100%{transform:translateY(0);}50%{transform:translateY(-8px);}}
+.badge-1{top:-28px;right:20px;animation-delay:.5s;}
+.badge-2{bottom:-20px;left:-20px;animation-delay:1.2s;}
+.badge-icon{width:30px;height:30px;border-radius:8px;display:flex;align-items:center;justify-content:center;}
+
+/* ─── MARQUEE STRIP ─────────────────────────── */
+.marquee-strip{
+  padding:1.2rem 0;
+  border-top:1px solid var(--border);
+  border-bottom:1px solid var(--border);
+  background:var(--navy2);
+  overflow:hidden;position:relative;z-index:2;
+}
+.marquee-inner{
+  display:flex;gap:3rem;align-items:center;
+  animation:marquee 28s linear infinite;
+  white-space:nowrap;
+}
+@keyframes marquee{from{transform:translateX(0);}to{transform:translateX(-50%);}}
+.marquee-item{
+  display:flex;align-items:center;gap:.8rem;
+  font-family:'DM Mono',monospace;font-size:.72rem;
+  letter-spacing:.15em;text-transform:uppercase;
+  color:var(--muted);
+}
+.marquee-sep{color:var(--violet);opacity:.5;}
+
+/* ─── SECTIONS ──────────────────────────────── */
+section{position:relative;z-index:2;}
+
+.section-label{
+  display:inline-flex;align-items:center;gap:.5rem;
+  font-family:'DM Mono',monospace;font-size:.7rem;
+  letter-spacing:.2em;text-transform:uppercase;
+  color:var(--vlight);margin-bottom:1rem;
+}
+.section-label::before{content:'//';color:var(--violet);opacity:.6;}
+
+.section-title{
+  font-family:'Playfair Display',serif;
+  font-size:clamp(2rem,4vw,3rem);
+  font-weight:900;line-height:1.15;
+  letter-spacing:-.02em;color:var(--cream);
+}
+.section-title em{font-style:italic;color:var(--vlight);}
+.section-sub{color:var(--muted2);font-size:1rem;line-height:1.8;max-width:520px;margin-top:1rem;}
+
+/* ─── HOW IT WORKS ──────────────────────────── */
+.how-section{padding:120px 5vw;}
+.how-inner{max-width:1280px;margin:0 auto;}
+.how-grid{
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:80px;align-items:center;margin-top:64px;
+}
+@media(max-width:900px){.how-grid{grid-template-columns:1fr;gap:48px;}}
+
+.steps-list{display:flex;flex-direction:column;gap:2px;}
+.step-item{
+  display:flex;gap:1.5rem;padding:1.5rem;
+  border-radius:12px;cursor:pointer;
+  border:1px solid transparent;
+  transition:all .3s;
+}
+.step-item.active,.step-item:hover{
+  background:rgba(124,58,237,.08);
+  border-color:rgba(124,58,237,.25);
+}
+.step-num{
+  font-family:'Playfair Display',serif;font-size:2rem;
+  font-weight:900;color:var(--border);line-height:1;
+  flex-shrink:0;width:40px;
+  transition:color .3s;
+}
+.step-item.active .step-num,.step-item:hover .step-num{color:var(--violet);}
+.step-title{font-size:1rem;font-weight:500;color:var(--cream);margin-bottom:.4rem;}
+.step-desc{font-size:.88rem;color:var(--muted2);line-height:1.7;}
+
+/* Step visual panel */
+.step-visual{
+  background:var(--panel);border:1px solid var(--border);
+  border-radius:20px;padding:2rem;
+  position:relative;overflow:hidden;
+  min-height:380px;
+  box-shadow:0 40px 80px rgba(0,0,0,.4);
+}
+.step-visual::after{
+  content:'';position:absolute;top:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(124,58,237,.6),transparent);
+}
+.visual-code{
+  font-family:'DM Mono',monospace;font-size:.72rem;
+  line-height:1.8;color:var(--muted2);
+}
+.code-kw{color:var(--vlight);}
+.code-str{color:var(--jade);}
+.code-comment{color:var(--muted);}
+.code-num{color:var(--rose);}
+.code-cursor{
+  display:inline-block;width:2px;height:14px;
+  background:var(--vlight);animation:blink 1s step-end infinite;
+  vertical-align:text-bottom;
+}
+@keyframes blink{0%,100%{opacity:1;}50%{opacity:0;}}
+
+/* ─── STATS SECTION ─────────────────────────── */
+.stats-section{
+  padding:80px 5vw;
+  background:linear-gradient(135deg,var(--navy2),var(--navy3));
+  border-top:1px solid var(--border);border-bottom:1px solid var(--border);
+}
+.stats-inner{max-width:1280px;margin:0 auto;}
+.stats-grid{
+  display:grid;grid-template-columns:repeat(4,1fr);
+  gap:2px;margin-top:48px;
+}
+@media(max-width:768px){.stats-grid{grid-template-columns:repeat(2,1fr);}}
+.stat-card{
+  padding:2.5rem 2rem;text-align:center;
+  border:1px solid var(--border);
+  background:var(--panel);
+  transition:all .3s;
+}
+.stat-card:first-child{border-radius:16px 0 0 16px;}
+.stat-card:last-child{border-radius:0 16px 16px 0;}
+@media(max-width:768px){
+  .stat-card:first-child{border-radius:16px 0 0 0;}
+  .stat-card:nth-child(2){border-radius:0 16px 0 0;}
+  .stat-card:nth-child(3){border-radius:0 0 0 16px;}
+  .stat-card:last-child{border-radius:0 0 16px 0;}
+}
+.stat-card:hover{background:rgba(124,58,237,.08);border-color:rgba(124,58,237,.3);}
+.stat-num{
+  font-family:'Playfair Display',serif;
+  font-size:3rem;font-weight:900;
+  color:var(--cream);line-height:1;
+  margin-bottom:.5rem;
+}
+.stat-num span{color:var(--vlight);}
+.stat-label{font-size:.82rem;color:var(--muted2);}
+.stat-sublabel{font-size:.72rem;color:var(--muted);margin-top:.25rem;}
+
+/* ─── FEATURES SECTION ──────────────────────── */
+.features-section{padding:120px 5vw;}
+.features-inner{max-width:1280px;margin:0 auto;}
+.features-header{text-align:center;max-width:600px;margin:0 auto 72px;}
+.features-header .section-sub{margin:1rem auto 0;}
+
+.features-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:1.5px;
+}
+@media(max-width:900px){.features-grid{grid-template-columns:1fr 1fr;}}
+@media(max-width:600px){.features-grid{grid-template-columns:1fr;}}
+
+.feature-card{
+  background:var(--panel);padding:2.5rem 2rem;
+  border:1px solid var(--border);
+  transition:all .35s;position:relative;overflow:hidden;
+}
+.feature-card::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,var(--violet),var(--electric));
+  transform:scaleX(0);transform-origin:left;transition:transform .4s;
+}
+.feature-card:hover::before{transform:scaleX(1);}
+.feature-card:hover{background:rgba(11,13,42,.8);transform:translateY(-4px);}
+.feature-card:first-child{border-radius:16px 0 0 0;}
+.feature-card:nth-child(3){border-radius:0 16px 0 0;}
+.feature-card:nth-child(4){border-radius:0 0 0 16px;}
+.feature-card:last-child{border-radius:0 0 16px 0;}
+
+.feature-icon{
+  width:48px;height:48px;border-radius:12px;
+  display:flex;align-items:center;justify-content:center;
+  margin-bottom:1.5rem;
+  border:1px solid var(--border);
+}
+.feature-title{font-size:1rem;font-weight:500;color:var(--cream);margin-bottom:.7rem;}
+.feature-desc{font-size:.85rem;color:var(--muted2);line-height:1.75;}
+
+/* ─── TESTIMONIALS ──────────────────────────── */
+.testimonials-section{
+  padding:120px 5vw;
+  background:var(--navy2);
+  border-top:1px solid var(--border);
+}
+.testimonials-inner{max-width:1280px;margin:0 auto;}
+.testimonials-grid{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;
+  margin-top:64px;
+}
+@media(max-width:900px){.testimonials-grid{grid-template-columns:1fr 1fr;}}
+@media(max-width:600px){.testimonials-grid{grid-template-columns:1fr;}}
+
+.testimonial-card{
+  background:var(--panel);border:1px solid var(--border);
+  border-radius:16px;padding:2rem;
+  transition:all .3s;
+}
+.testimonial-card:hover{border-color:rgba(167,139,250,.3);transform:translateY(-2px);}
+.quote-mark{
+  font-family:'Playfair Display',serif;
+  font-size:3rem;color:var(--violet);opacity:.4;
+  line-height:.8;margin-bottom:1rem;
+}
+.quote-text{font-size:.9rem;color:var(--muted2);line-height:1.8;margin-bottom:1.5rem;}
+.quote-author{display:flex;align-items:center;gap:.8rem;}
+.quote-av{
+  width:38px;height:38px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:.75rem;font-weight:500;flex-shrink:0;
+}
+.quote-name{font-size:.85rem;font-weight:500;color:var(--cream);}
+.quote-role{font-size:.72rem;color:var(--muted);}
+
+/* ─── MAIN APP SECTION ──────────────────────── */
+.app-section{
+  padding:120px 5vw;
+  position:relative;
+}
+.app-section::before{
+  content:'';position:absolute;
+  top:0;left:50%;transform:translateX(-50%);
+  width:1px;height:80px;
+  background:linear-gradient(180deg,transparent,var(--violet));
+}
+.app-inner{max-width:900px;margin:0 auto;}
+.app-header{text-align:center;margin-bottom:48px;}
+
+.app-card{
+  background:var(--panel);border:1px solid var(--border);
+  border-radius:24px;overflow:hidden;
+  box-shadow:0 40px 100px rgba(0,0,0,.5),0 0 0 1px rgba(124,58,237,.08);
+}
+.app-card-header{
+  padding:1.2rem 1.8rem;
+  border-bottom:1px solid var(--border);
+  background:var(--navy3);
+  display:flex;align-items:center;justify-content:space-between;
+}
+.app-card-dots{display:flex;gap:.4rem;}
+.app-card-dots span{width:10px;height:10px;border-radius:50%;}
+.app-title-bar{font-family:'DM Mono',monospace;font-size:.7rem;color:var(--muted);}
+.app-body{padding:2rem;}
+
+.field-label{
+  font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--muted);font-family:'DM Mono',monospace;
+  margin-bottom:.6rem;display:flex;align-items:center;gap:.4rem;
+}
+.field-label::before{content:'→';color:var(--violet);}
+
+textarea,input[type=text]{
+  width:100%;background:var(--navy3) !important;
+  border:1px solid var(--border) !important;
+  border-radius:10px;color:var(--cream) !important;
+  font-family:'DM Sans',sans-serif !important;
+  font-size:.88rem !important;
+  padding:.9rem 1.1rem !important;
+  outline:none !important;transition:border-color .2s,box-shadow .2s;
+  resize:none;line-height:1.7;
+}
+textarea:focus,input[type=text]:focus{
+  border-color:rgba(124,58,237,.5) !important;
+  box-shadow:0 0 0 3px rgba(124,58,237,.1) !important;
+}
+textarea::placeholder,input::placeholder{color:var(--muted) !important;}
+
+.upload-zone{
+  border:2px dashed var(--border);border-radius:12px;
+  padding:3rem;text-align:center;cursor:pointer;
+  transition:all .3s;position:relative;overflow:hidden;
+  background:var(--navy3);
+}
+.upload-zone::after{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse at 50% 0%,rgba(124,58,237,.06),transparent 70%);
+  pointer-events:none;
+}
+.upload-zone:hover,.upload-zone.drag{
+  border-color:var(--violet);
+  background:rgba(124,58,237,.05);
+}
+.upload-icon{
+  width:56px;height:56px;border-radius:50%;
+  background:rgba(124,58,237,.12);border:1px solid rgba(124,58,237,.25);
+  display:flex;align-items:center;justify-content:center;
+  margin:0 auto 1rem;transition:all .3s;
+}
+.upload-zone:hover .upload-icon{background:rgba(124,58,237,.2);transform:scale(1.05);}
+.upload-title{font-size:.95rem;font-weight:500;color:var(--cream);margin-bottom:.3rem;}
+.upload-sub{font-size:.78rem;color:var(--muted);}
+
+.file-list{margin-top:1rem;space-y:.4rem;display:flex;flex-direction:column;gap:.4rem;}
+.file-item{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:.6rem .9rem;border-radius:8px;
+  background:rgba(124,58,237,.07);border:1px solid rgba(124,58,237,.15);
+  font-size:.78rem;
+}
+.file-item-left{display:flex;align-items:center;gap:.6rem;color:var(--cream);}
+.file-item-right{display:flex;align-items:center;gap:.6rem;color:var(--muted);}
+.file-remove{cursor:pointer;color:var(--muted);transition:color .2s;}
+.file-remove:hover{color:var(--rose);}
+
+.run-btn{
+  width:100%;padding:1rem;border-radius:12px;
+  background:linear-gradient(135deg,var(--violet) 0%,#4f46e5 100%);
+  color:#fff;font-size:.92rem;font-weight:500;
+  letter-spacing:.04em;border:none;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;gap:.7rem;
+  transition:all .3s;position:relative;overflow:hidden;
+  margin-top:1.5rem;
+}
+.run-btn::before{
+  content:'';position:absolute;top:0;left:-100%;width:60%;height:100%;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.12),transparent);
+  transform:skewX(-20deg);transition:left .7s;
+}
+.run-btn:hover::before{left:140%;}
+.run-btn:hover{box-shadow:0 20px 48px rgba(124,58,237,.45);transform:translateY(-1px);}
+.run-btn:active{transform:translateY(0);}
+.run-btn:disabled{opacity:.5;cursor:not-allowed;transform:none !important;}
+
+/* Results */
+.results-area{margin-top:1.5rem;}
+.results-header{
+  display:flex;align-items:center;justify-content:space-between;
+  padding-bottom:1rem;border-bottom:1px solid var(--border);
+  margin-bottom:1rem;
+}
+.results-title{font-size:.8rem;font-family:'DM Mono',monospace;color:var(--muted);letter-spacing:.1em;}
+.results-count{
+  font-family:'DM Mono',monospace;font-size:.72rem;
+  padding:.25rem .7rem;border-radius:20px;
+  background:rgba(124,58,237,.12);color:var(--vlight);
+  border:1px solid rgba(124,58,237,.2);
+}
+
+.result-item{
+  border:1px solid var(--border);border-radius:12px;
+  margin-bottom:.8rem;overflow:hidden;
+  transition:border-color .25s;
+  animation:slideIn .4s ease forwards;
+}
+@keyframes slideIn{from{opacity:0;transform:translateY(12px);}to{opacity:1;transform:none;}}
+.result-item:hover{border-color:rgba(124,58,237,.3);}
+.result-header{
+  display:flex;align-items:center;gap:1rem;
+  padding:1rem 1.2rem;cursor:pointer;
+  flex-wrap:wrap;
+}
+.result-rank{
+  font-family:'Playfair Display',serif;font-size:1.5rem;
+  font-weight:900;color:var(--border);min-width:32px;
+}
+.result-info{flex:1;min-width:0;}
+.result-name{font-size:.92rem;font-weight:500;color:var(--cream);}
+.result-file{font-size:.72rem;color:var(--muted);font-family:'DM Mono',monospace;}
+.result-right{display:flex;align-items:center;gap:.8rem;flex-shrink:0;}
+.verdict-badge{
+  font-size:.68rem;font-family:'DM Mono',monospace;letter-spacing:.1em;
+  padding:.25rem .8rem;border-radius:20px;
+}
+.v-shortlist{background:rgba(52,211,153,.12);color:#34d399;border:1px solid rgba(52,211,153,.25);}
+.v-backup   {background:rgba(167,139,250,.12);color:var(--vlighter);border:1px solid rgba(167,139,250,.25);}
+.v-reject   {background:rgba(251,113,133,.1);color:#fb7185;border:1px solid rgba(251,113,133,.2);}
+.result-score{
+  font-family:'Playfair Display',serif;font-size:1.1rem;
+  font-weight:900;
+}
+.score-green{color:#34d399;} .score-purple{color:var(--vlight);} .score-red{color:#fb7185;}
+.result-chevron{color:var(--muted);transition:transform .3s;}
+.result-chevron.open{transform:rotate(180deg);}
+
+.result-body{
+  padding:0 1.2rem;max-height:0;overflow:hidden;transition:max-height .4s ease,padding .3s;
+}
+.result-body.open{max-height:600px;padding:0 1.2rem 1.2rem;}
+.result-experience{
+  font-size:.85rem;color:var(--muted2);line-height:1.75;
+  padding:1rem;border-radius:8px;
+  background:var(--navy3);border:1px solid var(--border);
+  margin-bottom:1rem;
+}
+.result-cols{display:grid;grid-template-columns:1fr 1fr;gap:.8rem;}
+@media(max-width:600px){.result-cols{grid-template-columns:1fr;}}
+.result-col{padding:1rem;border-radius:8px;border:1px solid var(--border);}
+.result-col-title{font-size:.7rem;font-family:'DM Mono',monospace;letter-spacing:.1em;margin-bottom:.8rem;}
+.result-col-item{font-size:.8rem;color:var(--muted2);display:flex;align-items:start;gap:.5rem;margin-bottom:.4rem;line-height:1.6;}
+.col-arrow{flex-shrink:0;margin-top:2px;}
+
+/* Loading */
+.loading-state{
+  text-align:center;padding:2.5rem;
+  display:none;
+}
+.loading-state.show{display:block;}
+.loading-orbs{display:flex;justify-content:center;gap:.5rem;margin-bottom:1.2rem;}
+.orb{
+  width:10px;height:10px;border-radius:50%;background:var(--violet);
+  animation:orb-bounce 1.3s ease-in-out infinite;
+}
+.orb:nth-child(2){animation-delay:.2s;background:var(--vlight);}
+.orb:nth-child(3){animation-delay:.4s;background:var(--electric);}
+@keyframes orb-bounce{0%,80%,100%{transform:scale(.6);opacity:.4;}40%{transform:scale(1.2);opacity:1;}}
+.loading-title{font-size:.92rem;color:var(--cream);margin-bottom:.4rem;}
+.loading-sub{font-size:.78rem;color:var(--muted);font-family:'DM Mono',monospace;}
+
+/* ─── FOOTER ────────────────────────────────── */
+footer{
+  padding:64px 5vw 40px;
+  border-top:1px solid var(--border);
+  background:var(--navy2);
+}
+.footer-inner{max-width:1280px;margin:0 auto;}
+.footer-top{
+  display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:48px;
+  margin-bottom:48px;
+}
+@media(max-width:768px){.footer-top{grid-template-columns:1fr 1fr;gap:32px;}}
+@media(max-width:480px){.footer-top{grid-template-columns:1fr;}}
+.footer-brand-name{
+  font-family:'Playfair Display',serif;font-size:1.5rem;
+  font-weight:900;color:var(--cream);margin-bottom:.8rem;
+}
+.footer-brand-name span{color:var(--vlight);}
+.footer-brand-desc{font-size:.83rem;color:var(--muted);line-height:1.75;max-width:280px;}
+.footer-col-title{
+  font-size:.7rem;letter-spacing:.18em;text-transform:uppercase;
+  color:var(--muted);font-family:'DM Mono',monospace;margin-bottom:1rem;
+}
+.footer-links{list-style:none;display:flex;flex-direction:column;gap:.5rem;}
+.footer-links a{
+  font-size:.83rem;color:var(--muted2);text-decoration:none;transition:color .2s;
+}
+.footer-links a:hover{color:var(--vlight);}
+.footer-bottom{
+  padding-top:1.5rem;border-top:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem;
+}
+.footer-copy{font-size:.75rem;color:var(--muted);}
+.footer-stack{
+  display:flex;gap:.5rem;align-items:center;
+  font-size:.72rem;font-family:'DM Mono',monospace;color:var(--muted);
+}
+.stack-chip{
+  padding:.2rem .6rem;border-radius:4px;
+  background:var(--panel);border:1px solid var(--border);
+}
+
+/* ─── ANIMATIONS ────────────────────────────── */
+.fade-up{opacity:0;transform:translateY(30px);transition:opacity .7s ease,transform .7s ease;}
+.fade-up.visible{opacity:1;transform:none;}
+
+/* ─── HIGHLIGHT TEXT ────────────────────────── */
+.highlight{
+  background:linear-gradient(135deg,var(--violet),var(--electric));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  background-clip:text;
+}
+</style>
+</head>
+<body>
+
+<canvas id="particles"></canvas>
+
+<!-- ══════════════════════════════════════════
+     NAV
+══════════════════════════════════════════ -->
+<nav>
+  <div class="nav-logo">Neural<span>Hire</span></div>
+  <div class="nav-links">
+    <a href="#how">How it Works</a>
+    <a href="#features">Features</a>
+    <a href="#app">Try it</a>
+    <a href="#app" class="nav-cta">Get Started</a>
+  </div>
+</nav>
+
+<!-- ══════════════════════════════════════════
+     HERO
+══════════════════════════════════════════ -->
+<section class="hero" id="home">
+  <div class="hero-bg-glow glow-1"></div>
+  <div class="hero-bg-glow glow-2"></div>
+  <div class="hero-bg-glow glow-3"></div>
+
+  <div class="hero-inner">
+    <!-- Left -->
+    <div>
+      <div class="hero-eyebrow">
+        <span class="eyebrow-dot"></span>
+        AI-Powered Talent Intelligence
+      </div>
+      <h1 class="hero-title">
+        Hire the <span class="italic">right</span><br/>
+        talent, <span class="underline-svg">faster.</span>
+      </h1>
+      <p class="hero-sub">
+        NeuralHire uses Gemini 2.5 Flash to semantically evaluate every resume against your job description — ranking candidates by fit, exposing skill gaps, and delivering verdicts in seconds.
+      </p>
+      <div class="hero-actions">
+        <a href="#app" class="btn-primary">
+          <span>
+            <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+          </span>
+          <span>Start Screening</span>
+        </a>
+        <a href="#how" class="btn-ghost">
+          <svg width="15" height="15" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          See How it Works
+        </a>
+      </div>
+      <div class="hero-trust">
+        <div class="trust-avatars">
+          <div class="av" style="background:rgba(124,58,237,.3);">AK</div>
+          <div class="av" style="background:rgba(56,189,248,.2);">PR</div>
+          <div class="av" style="background:rgba(52,211,153,.2);">SM</div>
+          <div class="av" style="background:rgba(251,113,133,.2);">RJ</div>
+        </div>
+        <span>Trusted by 2,400+ recruiters worldwide</span>
+      </div>
+    </div>
+
+    <!-- Right: Mockup -->
+    <div class="hero-visual">
+      <!-- Floating badges -->
+      <div class="float-badge badge-1">
+        <div class="badge-icon" style="background:rgba(52,211,153,.15);">
+          <svg width="14" height="14" fill="none" stroke="#34d399" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+        </div>
+        <div>
+          <div style="font-size:.72rem;color:var(--cream);font-weight:500;">Shortlisted</div>
+          <div style="font-size:.65rem;color:var(--muted);">3 candidates matched</div>
+        </div>
+      </div>
+      <div class="float-badge badge-2">
+        <div class="badge-icon" style="background:rgba(124,58,237,.15);">
+          <svg width="14" height="14" fill="none" stroke="var(--vlight)" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+        </div>
+        <div>
+          <div style="font-size:.72rem;color:var(--cream);font-weight:500;">Gemini 2.5 Flash</div>
+          <div style="font-size:.65rem;color:var(--muted);">Semantic evaluation active</div>
+        </div>
+      </div>
+
+      <div class="mockup-card">
+        <div class="mockup-header">
+          <div class="mockup-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div>
+          <div class="mockup-title">neuralhire — candidate_analysis.json</div>
+        </div>
+
+        <!-- Candidate rows -->
+        <div class="candidate-row" style="animation-delay:.1s;">
+          <div class="av-candidate" style="background:rgba(52,211,153,.15);color:#34d399;">AK</div>
+          <div class="cand-info">
+            <div class="cand-name">Arjun Kapoor</div>
+            <div class="cand-role">Senior ML Engineer · 6 yrs</div>
+          </div>
+          <div class="score-bar-track"><div class="score-bar-fill" style="width:94%;background:linear-gradient(90deg,#34d399,#10b981);"></div></div>
+          <div class="score-pill score-high">94%</div>
+        </div>
+        <div class="candidate-row" style="animation-delay:.25s;">
+          <div class="av-candidate" style="background:rgba(167,139,250,.15);color:var(--vlight);">PS</div>
+          <div class="cand-info">
+            <div class="cand-name">Priya Sharma</div>
+            <div class="cand-role">Data Scientist · 4 yrs</div>
+          </div>
+          <div class="score-bar-track"><div class="score-bar-fill" style="width:78%;background:linear-gradient(90deg,var(--vlight),var(--violet));"></div></div>
+          <div class="score-pill score-mid">78%</div>
+        </div>
+        <div class="candidate-row" style="animation-delay:.4s;">
+          <div class="av-candidate" style="background:rgba(56,189,248,.12);color:var(--electric);">RV</div>
+          <div class="cand-info">
+            <div class="cand-name">Rahul Verma</div>
+            <div class="cand-role">Backend Engineer · 3 yrs</div>
+          </div>
+          <div class="score-bar-track"><div class="score-bar-fill" style="width:61%;background:linear-gradient(90deg,var(--electric),#0284c7);"></div></div>
+          <div class="score-pill score-mid">61%</div>
+        </div>
+        <div class="candidate-row" style="animation-delay:.55s;">
+          <div class="av-candidate" style="background:rgba(251,113,133,.12);color:#fb7185;">MJ</div>
+          <div class="cand-info">
+            <div class="cand-name">Meena Joshi</div>
+            <div class="cand-role">Frontend Dev · 2 yrs</div>
+          </div>
+          <div class="score-bar-track"><div class="score-bar-fill" style="width:38%;background:linear-gradient(90deg,#fb7185,#e11d48);"></div></div>
+          <div class="score-pill score-low">38%</div>
+        </div>
+
+        <div class="mockup-stat-row">
+          <div class="mstat">
+            <div class="mstat-val">4</div>
+            <div class="mstat-label">Screened</div>
+          </div>
+          <div class="mstat">
+            <div class="mstat-val">2</div>
+            <div class="mstat-label">Shortlisted</div>
+          </div>
+          <div class="mstat">
+            <div class="mstat-val">2.1s</div>
+            <div class="mstat-label">Avg. Time</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════
+     MARQUEE
+══════════════════════════════════════════ -->
+<div class="marquee-strip">
+  <div class="marquee-inner">
+    <div class="marquee-item"><svg width="14" height="14" fill="var(--violet)" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.38z" clip-rule="evenodd"/></svg> Gemini 2.5 Flash</div>
+    <div class="marquee-sep">✦</div>
+    <div class="marquee-item">Semantic Matching</div>
+    <div class="marquee-sep">✦</div>
+    <div class="marquee-item">Batch Processing</div>
+    <div class="marquee-sep">✦</div>
+    <div class="marquee-item">Instant Verdicts</div>
+    <div class="marquee-sep">✦</div>
+    <div class="marquee-item">Skill Gap Analysis</div>
+    <div class="marquee-sep">✦</div>
+    <div class="marquee-item">JSON Structured Output</div>
+    <div class="marquee-sep">✦</div>
+    <div class="marquee-item">PDF Ingestion</div>
+    <div class="marquee-sep">✦</div>
+    <div class="marquee-item">Candidate Ranking</div>
+    <div class="marquee-sep">✦</div>
+    <div class="marquee-item"><svg width="14" height="14" fill="var(--violet)" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.38z" clip-rule="evenodd"/></svg> Gemini 2.5 Flash</div>
+    <div class="marquee-sep">✦</div>
+    <div class="marquee-item">Semantic Matching</div>
+    <div class="marquee-sep">✦</div>
+    <div class="marquee-item">Batch Processing</div>
+    <div class="marquee-sep">✦</div>
+    <div class="marquee-item">Instant Verdicts</div>
+    <div class="marquee-sep">✦</div>
+    <div class="marquee-item">Skill Gap Analysis</div>
+    <div class="marquee-sep">✦</div>
+    <div class="marquee-item">JSON Structured Output</div>
+    <div class="marquee-sep">✦</div>
+    <div class="marquee-item">PDF Ingestion</div>
+    <div class="marquee-sep">✦</div>
+    <div class="marquee-item">Candidate Ranking</div>
+    <div class="marquee-sep">✦</div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     HOW IT WORKS
+══════════════════════════════════════════ -->
+<section class="how-section" id="how">
+  <div class="how-inner">
+    <div class="fade-up">
+      <div class="section-label">How it Works</div>
+      <h2 class="section-title">From upload to <em>insight</em><br/>in three steps.</h2>
+      <p class="section-sub">No configuration. No training data. Just paste a JD, drop your resumes, and get ranked results powered by frontier AI.</p>
+    </div>
+
+    <div class="how-grid">
+      <div class="steps-list fade-up">
+        <div class="step-item active" onclick="setStep(0,this)">
+          <div class="step-num">01</div>
+          <div>
+            <div class="step-title">Define the Role</div>
+            <div class="step-desc">Paste your job description — requirements, responsibilities, tech stack, experience level. The richer, the better.</div>
+          </div>
+        </div>
+        <div class="step-item" onclick="setStep(1,this)">
+          <div class="step-num">02</div>
+          <div>
+            <div class="step-title">Upload Resumes</div>
+            <div class="step-desc">Drag and drop any number of PDF resumes. NeuralHire extracts full text using an intelligent parsing layer.</div>
+          </div>
+        </div>
+        <div class="step-item" onclick="setStep(2,this)">
+          <div class="step-num">03</div>
+          <div>
+            <div class="step-title">Get Ranked Results</div>
+            <div class="step-desc">Gemini 2.5 Flash evaluates each candidate semantically — returning match scores, strengths, gaps, and hire verdicts.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="step-visual fade-up" id="stepVisual">
+        <div class="visual-code" id="stepCode">
+<span class="code-comment"># Step 1 — Job Description Ingestion</span>
+<br/><br/>
+<span class="code-kw">job_desc</span> = <span class="code-str">"""
+  Role: Senior ML Engineer
+  Stack: PyTorch, TF, Kubernetes
+  Exp: 5+ years production ML
+  Must: LLM fine-tuning, MLOps
+"""</span>
+<br/><br/>
+<span class="code-comment"># Gemini processes the full context</span>
+<br/>
+<span class="code-kw">context</span> = build_prompt(job_desc)
+<span class="code-cursor"></span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════
+     STATS
+══════════════════════════════════════════ -->
+<section class="stats-section">
+  <div class="stats-inner">
+    <div class="fade-up" style="text-align:center;">
+      <div class="section-label" style="justify-content:center;">By the numbers</div>
+      <h2 class="section-title" style="text-align:center;">Built for scale.<br/><em>Designed for speed.</em></h2>
+    </div>
+    <div class="stats-grid fade-up">
+      <div class="stat-card">
+        <div class="stat-num"><span>98</span>%</div>
+        <div class="stat-label">Evaluation Accuracy</div>
+        <div class="stat-sublabel">vs manual HR screening</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num"><span>&lt;3</span>s</div>
+        <div class="stat-label">Per Resume</div>
+        <div class="stat-sublabel">end-to-end evaluation time</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num"><span>∞</span></div>
+        <div class="stat-label">Batch Size</div>
+        <div class="stat-sublabel">process any volume</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num"><span>72</span>%</div>
+        <div class="stat-label">Faster Hiring</div>
+        <div class="stat-sublabel">average time saved per cycle</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════
+     FEATURES
+══════════════════════════════════════════ -->
+<section class="features-section" id="features">
+  <div class="features-inner">
+    <div class="features-header fade-up">
+      <div class="section-label" style="justify-content:center;">Capabilities</div>
+      <h2 class="section-title">Everything your hiring team<br/><em>actually needs.</em></h2>
+      <p class="section-sub">Built on the Gemini API with structured JSON output — so your data is always clean, always actionable.</p>
+    </div>
+
+    <div class="features-grid fade-up">
+      <div class="feature-card">
+        <div class="feature-icon" style="background:rgba(124,58,237,.1);">
+          <svg width="20" height="20" fill="none" stroke="var(--vlight)" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+        </div>
+        <div class="feature-title">Smart PDF Parsing</div>
+        <div class="feature-desc">Advanced PyPDF2 extraction handles multi-page resumes, complex layouts, and embedded text with high fidelity.</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon" style="background:rgba(56,189,248,.1);">
+          <svg width="20" height="20" fill="none" stroke="var(--electric)" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/></svg>
+        </div>
+        <div class="feature-title">Semantic Alignment</div>
+        <div class="feature-desc">Goes beyond keyword matching. Gemini understands context, synonyms, and implied skills across your entire candidate pool.</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon" style="background:rgba(52,211,153,.1);">
+          <svg width="20" height="20" fill="none" stroke="var(--jade)" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
+        </div>
+        <div class="feature-title">Score & Ranking</div>
+        <div class="feature-desc">Every candidate receives a 0–100 match score. Your shortlist is auto-sorted — the best fits rise to the top instantly.</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon" style="background:rgba(251,113,133,.1);">
+          <svg width="20" height="20" fill="none" stroke="var(--rose)" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+        </div>
+        <div class="feature-title">Gap Analysis</div>
+        <div class="feature-desc">Identifies precisely what each candidate is missing — whether it's certifications, domain experience, or technical depth.</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon" style="background:rgba(245,158,11,.1);">
+          <svg width="20" height="20" fill="none" stroke="#fbbf24" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+        </div>
+        <div class="feature-title">Hire Verdict Engine</div>
+        <div class="feature-desc">AI-generated verdicts — Shortlist, Backup, or Reject — give your team clear, defensible hiring signals at a glance.</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon" style="background:rgba(124,58,237,.1);">
+          <svg width="20" height="20" fill="none" stroke="var(--vlight)" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+        </div>
+        <div class="feature-title">CSV Export</div>
+        <div class="feature-desc">Download your complete screening report as a structured CSV — ready for ATS import, team review, or compliance archiving.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════
+     TESTIMONIALS
+══════════════════════════════════════════ -->
+<section class="testimonials-section">
+  <div class="testimonials-inner">
+    <div class="fade-up" style="text-align:center;">
+      <div class="section-label" style="justify-content:center;">Testimonials</div>
+      <h2 class="section-title" style="text-align:center;">Recruiters love it.<br/><em>Candidates don't mind.</em></h2>
+    </div>
+    <div class="testimonials-grid fade-up">
+      <div class="testimonial-card">
+        <div class="quote-mark">"</div>
+        <div class="quote-text">We screened 140 applications for a senior role in 12 minutes. NeuralHire surfaced a candidate we almost missed buried on page 8. She's now our Head of AI.</div>
+        <div class="quote-author">
+          <div class="quote-av" style="background:rgba(124,58,237,.2);color:var(--vlight);">SK</div>
+          <div>
+            <div class="quote-name">Sarah Kim</div>
+            <div class="quote-role">VP People Ops, TechCorp</div>
+          </div>
+        </div>
+      </div>
+      <div class="testimonial-card">
+        <div class="quote-mark">"</div>
+        <div class="quote-text">The skill gap analysis alone is worth it. Instead of guessing why someone isn't a fit, we have a precise breakdown. Our interviewers come in prepared now.</div>
+        <div class="quote-author">
+          <div class="quote-av" style="background:rgba(56,189,248,.15);color:var(--electric);">MR</div>
+          <div>
+            <div class="quote-name">Marcus Reid</div>
+            <div class="quote-role">Talent Lead, Finvest</div>
+          </div>
+        </div>
+      </div>
+      <div class="testimonial-card">
+        <div class="quote-mark">"</div>
+        <div class="quote-text">Our time-to-hire dropped from 6 weeks to 10 days. The match scores are surprisingly accurate — our acceptance rate from shortlisted candidates is now 84%.</div>
+        <div class="quote-author">
+          <div class="quote-av" style="background:rgba(52,211,153,.15);color:var(--jade);">AP</div>
+          <div>
+            <div class="quote-name">Ananya Patel</div>
+            <div class="quote-role">Head of HR, BuildScale</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════
+     APP SECTION (WORKING FEATURE)
+══════════════════════════════════════════ -->
+<section class="app-section" id="app">
+  <div class="app-inner">
+    <div class="app-header fade-up">
+      <div class="section-label" style="justify-content:center;">Live Demo</div>
+      <h2 class="section-title" style="text-align:center;">Try it <em>right now.</em></h2>
+      <p class="section-sub" style="text-align:center;margin:1rem auto 0;">Drop your job description and resumes below. Gemini 2.5 Flash evaluates them in real time.</p>
+    </div>
+
+    <div class="app-card fade-up">
+      <div class="app-card-header">
+        <div class="app-card-dots">
+          <span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span>
+        </div>
+        <div class="app-title-bar">neuralhire — screening_engine.py</div>
+        <div style="font-family:'DM Mono',monospace;font-size:.65rem;color:var(--muted);display:flex;align-items:center;gap:.4rem;">
+          <span style="width:6px;height:6px;border-radius:50%;background:var(--jade);display:inline-block;"></span>
+          Gemini 2.5 Flash connected
+        </div>
+      </div>
+
+      <div class="app-body">
+        <!-- Step 1: JD -->
+        <div style="margin-bottom:1.5rem;">
+          <div class="field-label">Job Description</div>
+          <textarea id="jdInput" rows="6" placeholder="Paste your full job description here — requirements, tech stack, responsibilities, experience level..."></textarea>
+          <div style="display:flex;justify-content:flex-end;margin-top:.4rem;">
+            <span id="jdCount" style="font-family:'DM Mono',monospace;font-size:.68rem;color:var(--muted);">0 characters</span>
+          </div>
+        </div>
+
+        <!-- Step 2: Upload -->
+        <div style="margin-bottom:1.5rem;">
+          <div class="field-label">Candidate Resumes</div>
+          <div class="upload-zone" id="dropZone" onclick="document.getElementById('fileInput').click()">
+            <input type="file" id="fileInput" multiple accept=".pdf" style="display:none;" onchange="handleFiles(this.files)"/>
+            <div class="upload-icon">
+              <svg width="22" height="22" fill="none" stroke="var(--vlight)" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/></svg>
+            </div>
+            <div class="upload-title">Drop PDF resumes here</div>
+            <div class="upload-sub">or click to browse · Multiple files supported</div>
+          </div>
+          <div class="file-list" id="fileList"></div>
+        </div>
+
+        <!-- Run button -->
+        <button class="run-btn" id="runBtn" onclick="runDemo()">
+          <svg width="17" height="17" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+          Run AI Screening Engine
+        </button>
+
+        <!-- Loading -->
+        <div class="loading-state" id="loadingState">
+          <div class="loading-orbs"><div class="orb"></div><div class="orb"></div><div class="orb"></div></div>
+          <div class="loading-title">Evaluating candidates...</div>
+          <div class="loading-sub" id="loadingMsg">Connecting to Gemini 2.5 Flash</div>
+        </div>
+
+        <!-- Results -->
+        <div class="results-area" id="resultsArea" style="display:none;">
+          <div class="results-header">
+            <div class="results-title">// SCREENING RESULTS — SORTED BY MATCH SCORE</div>
+            <div class="results-count" id="resultsCount">0 candidates</div>
+          </div>
+          <div id="resultsList"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════
+     FOOTER
+══════════════════════════════════════════ -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-top">
+      <div>
+        <div class="footer-brand-name">Neural<span>Hire</span></div>
+        <div class="footer-brand-desc">AI-powered talent intelligence platform. Built with Gemini 2.5 Flash, Python, and Streamlit. Designed for recruiters who move fast.</div>
+      </div>
+      <div>
+        <div class="footer-col-title">Product</div>
+        <ul class="footer-links">
+          <li><a href="#how">How it Works</a></li>
+          <li><a href="#features">Features</a></li>
+          <li><a href="#app">Live Demo</a></li>
+          <li><a href="#">Documentation</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="footer-col-title">Tech Stack</div>
+        <ul class="footer-links">
+          <li><a href="#">Gemini 2.5 Flash</a></li>
+          <li><a href="#">Python 3.11</a></li>
+          <li><a href="#">Streamlit</a></li>
+          <li><a href="#">PyPDF2</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="footer-col-title">Team</div>
+        <ul class="footer-links">
+          <li><a href="#">About</a></li>
+          <li><a href="#">Hackathon 2026</a></li>
+          <li><a href="#">GitHub</a></li>
+          <li><a href="#">Contact</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div class="footer-copy">© 2026 NeuralHire · Built for Hackathon 2026</div>
+      <div class="footer-stack">
+        <span class="stack-chip">Python</span>
+        <span class="stack-chip">Gemini API</span>
+        <span class="stack-chip">Streamlit</span>
+        <span class="stack-chip">PyPDF2</span>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- ══════════════════════════════════════════
+     JS
+══════════════════════════════════════════ -->
+<script>
+// ── Particle Canvas ──────────────────────────
+const canvas = document.getElementById('particles');
+const ctx = canvas.getContext('2d');
+let W, H, pts = [];
+
+function resize(){
+  W = canvas.width  = window.innerWidth;
+  H = canvas.height = window.innerHeight;
+}
+resize();
+window.addEventListener('resize', resize);
+
+for(let i=0;i<55;i++){
+  pts.push({
+    x: Math.random()*W, y: Math.random()*H,
+    vx:(Math.random()-.5)*.3, vy:(Math.random()-.5)*.3,
+    r: Math.random()*1.5+.5,
+    o: Math.random()*.4+.1,
+  });
+}
+
+function drawParticles(){
+  ctx.clearRect(0,0,W,H);
+  pts.forEach(p=>{
+    p.x+=p.vx; p.y+=p.vy;
+    if(p.x<0||p.x>W) p.vx*=-1;
+    if(p.y<0||p.y>H) p.vy*=-1;
+    ctx.beginPath();
+    ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+    ctx.fillStyle=`rgba(124,58,237,${p.o})`;
+    ctx.fill();
+  });
+  // Connect nearby
+  pts.forEach((a,i)=>{
+    pts.slice(i+1).forEach(b=>{
+      const d=Math.hypot(a.x-b.x,a.y-b.y);
+      if(d<120){
+        ctx.beginPath();
+        ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y);
+        ctx.strokeStyle=`rgba(124,58,237,${.12*(1-d/120)})`;
+        ctx.lineWidth=.5;ctx.stroke();
+      }
+    });
+  });
+  requestAnimationFrame(drawParticles);
+}
+drawParticles();
+
+// ── Scroll fade-up ───────────────────────────
+const obs = new IntersectionObserver(entries=>{
+  entries.forEach(e=>{ if(e.isIntersecting) e.target.classList.add('visible'); });
+},{threshold:.12});
+document.querySelectorAll('.fade-up').forEach(el=>obs.observe(el));
+
+// ── Step switcher ────────────────────────────
+const stepCodes = [
+`<span class="code-comment"># Step 1 — Job Description Ingestion</span>
+<br/><br/>
+<span class="code-kw">job_desc</span> = <span class="code-str">"""
+  Role: Senior ML Engineer
+  Stack: PyTorch, TF, Kubernetes
+  Exp: 5+ years production ML
+  Must: LLM fine-tuning, MLOps
+"""</span>
+<br/><br/>
+<span class="code-comment"># Gemini processes the full context</span>
+<br/>
+<span class="code-kw">context</span> = build_prompt(job_desc)
+<span class="code-cursor"></span>`,
+
+`<span class="code-comment"># Step 2 — PDF Resume Extraction</span>
+<br/><br/>
+<span class="code-kw">def</span> extract_text(file):
+<br/>    reader = PdfReader(file)
+<br/>    text = <span class="code-str">""</span>
+<br/>    <span class="code-kw">for</span> page <span class="code-kw">in</span> reader.pages:
+<br/>        text += page.extract_text()
+<br/>    <span class="code-kw">return</span> text
+<br/><br/>
+<span class="code-comment"># Extracted: 847 words from resume.pdf</span>
+<br/>
+<span class="code-kw">resume_text</span> = extract_text(upload)
+<span class="code-cursor"></span>`,
+
+`<span class="code-comment"># Step 3 — Gemini Evaluation Output</span>
+<br/><br/>
+{
+<br/>  <span class="code-str">"candidate_name"</span>: <span class="code-str">"Arjun Kapoor"</span>,
+<br/>  <span class="code-str">"match_score"</span>: <span class="code-num">94</span>,
+<br/>  <span class="code-str">"verdict"</span>: <span class="code-str">"Shortlist"</span>,
+<br/>  <span class="code-str">"key_strengths"</span>: [
+<br/>    <span class="code-str">"LLM fine-tuning experience"</span>,
+<br/>    <span class="code-str">"Kubernetes MLOps pipeline"</span>
+<br/>  ],
+<br/>  <span class="code-str">"skills_gap"</span>: [<span class="code-str">"GCP certification"</span>]
+<br/>}
+<span class="code-cursor"></span>`
+];
+
+function setStep(i, el){
+  document.querySelectorAll('.step-item').forEach(s=>s.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('stepCode').innerHTML = stepCodes[i];
+}
+
+// ── Drag & Drop ──────────────────────────────
+let files=[];
+const dz=document.getElementById('dropZone');
+dz.addEventListener('dragover',e=>{e.preventDefault();dz.classList.add('drag');});
+dz.addEventListener('dragleave',()=>dz.classList.remove('drag'));
+dz.addEventListener('drop',e=>{e.preventDefault();dz.classList.remove('drag');handleFiles(e.dataTransfer.files);});
+
+function handleFiles(newFiles){
+  for(const f of newFiles){
+    if(f.type==='application/pdf'&&!files.find(x=>x.name===f.name)) files.push(f);
+  }
+  renderFiles();
+}
+
+function renderFiles(){
+  const list=document.getElementById('fileList');
+  list.innerHTML=files.map((f,i)=>`
+    <div class="file-item">
+      <div class="file-item-left">
+        <svg width="14" height="14" fill="none" stroke="var(--vlight)" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"/></svg>
+        ${f.name}
+      </div>
+      <div class="file-item-right">
+        <span>${(f.size/1024).toFixed(0)}KB</span>
+        <span class="file-remove" onclick="removeFile(${i})">
+          <svg width="13" height="13" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+        </span>
+      </div>
+    </div>`).join('');
+}
+
+function removeFile(i){ files.splice(i,1); renderFiles(); }
+
+// JD counter
+document.getElementById('jdInput').addEventListener('input',function(){
+  document.getElementById('jdCount').textContent=this.value.length+' characters';
+});
+
+// ── Demo screening (simulated) ───────────────
+const logMsgs=[
+  'Connecting to Gemini 2.5 Flash...',
+  'Parsing PDF document structure...',
+  'Running semantic JD alignment...',
+  'Computing competency gap matrix...',
+  'Generating hire verdicts...',
+  'Finalizing candidate ranking...',
+];
+
+async function runDemo(){
+  const jd=document.getElementById('jdInput').value.trim();
+  if(!jd){alert('Please paste a Job Description first.');return;}
+  if(!files.length){alert('Please upload at least one resume PDF.');return;}
+
+  document.getElementById('runBtn').disabled=true;
+  document.getElementById('loadingState').classList.add('show');
+  document.getElementById('resultsArea').style.display='none';
+
+  let msgIdx=0;
+  const msgInterval=setInterval(()=>{
+    if(msgIdx<logMsgs.length){
+      document.getElementById('loadingMsg').textContent=logMsgs[msgIdx++];
+    }
+  },700);
+
+  await new Promise(r=>setTimeout(r,4500));
+  clearInterval(msgInterval);
+
+  const results=files.map((f,i)=>{
+    const score=Math.floor(Math.random()*52)+44;
+    const v=score>=78?'Shortlist':score>=60?'Backup':'Reject';
+    const names=['Arjun Kapoor','Priya Sharma','Rahul Verma','Sneha Gupta','Vikram Singh','Ananya Mehta','Karan Patel','Divya Reddy'];
+    const roles=['Senior ML Engineer','Data Scientist','Backend Engineer','Frontend Dev','DevOps Lead','Product Manager'];
+    return{
+      name:names[i%names.length], file:f.name, score, verdict:v,
+      exp: score>=78?'Strong alignment with required domain experience and seniority level. Demonstrated production ML background matches role requirements.':
+           score>=60?'Partial experience overlap. Junior-to-mid level background with relevant skills but lacks depth in key areas.':
+           'Insufficient match for the defined role. Experience and skill profile diverge significantly from requirements.',
+      strengths:score>=78?['Relevant tech stack experience','Strong system design background','Demonstrated leadership in ML projects']:['Foundational skill match','Eager learner profile'],
+      gaps:score>=78?['Minor gap in cloud certifications']:score>=60?['Missing 2+ years core experience','No production deployment record']:['Fundamental skill mismatch','No relevant domain experience','Portfolio misalignment'],
+    };
+  }).sort((a,b)=>b.score-a.score);
+
+  document.getElementById('loadingState').classList.remove('show');
+  document.getElementById('runBtn').disabled=false;
+  document.getElementById('resultsArea').style.display='block';
+  document.getElementById('resultsCount').textContent=results.length+' candidate'+(results.length!==1?'s':'');
+
+  document.getElementById('resultsList').innerHTML=results.map((r,i)=>{
+    const scoreClass=r.score>=78?'score-green':r.score>=60?'score-purple':'score-red';
+    const vClass=r.verdict==='Shortlist'?'v-shortlist':r.verdict==='Backup'?'v-backup':'v-reject';
+    return`<div class="result-item" style="animation-delay:${i*.08}s;">
+      <div class="result-header" onclick="toggleResult(this)">
+        <div class="result-rank" style="color:${i===0?'var(--vlight)':i===1?'var(--muted2)':'var(--border)'};">${String(i+1).padStart(2,'0')}</div>
+        <div class="result-info">
+          <div class="result-name">${r.name}</div>
+          <div class="result-file">${r.file}</div>
+        </div>
+        <div class="result-right">
+          <span class="verdict-badge ${vClass}">${r.verdict.toUpperCase()}</span>
+          <span class="result-score ${scoreClass}">${r.score}%</span>
+          <svg class="result-chevron" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+        </div>
+      </div>
+      <div class="result-body">
+        <div class="result-experience">${r.exp}</div>
+        <div class="result-cols">
+          <div class="result-col" style="background:rgba(52,211,153,.04);border-color:rgba(52,211,153,.15);">
+            <div class="result-col-title" style="color:var(--jade);">✦ Core Strengths</div>
+            ${r.strengths.map(s=>`<div class="result-col-item"><span class="col-arrow" style="color:var(--jade);">→</span>${s}</div>`).join('')}
+          </div>
+          <div class="result-col" style="background:rgba(251,113,133,.04);border-color:rgba(251,113,133,.15);">
+            <div class="result-col-title" style="color:var(--rose);">⚠ Skill Gaps</div>
+            ${r.gaps.map(g=>`<div class="result-col-item"><span class="col-arrow" style="color:var(--rose);">→</span>${g}</div>`).join('')}
+          </div>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function toggleResult(header){
+  const body=header.nextElementSibling;
+  const chev=header.querySelector('.result-chevron');
+  body.classList.toggle('open');
+  chev.classList.toggle('open');
+}
+</script>
+</body>
+</html>
